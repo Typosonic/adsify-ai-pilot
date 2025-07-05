@@ -9,6 +9,7 @@ import CreateCampaign from "./pages/CreateCampaign";
 import Optimizer from "./pages/Optimizer";
 import CompetitorSpy from "./pages/CompetitorSpy";
 import Settings from "./pages/Settings";
+import MVPChecklist from "./pages/MVPChecklist";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="create" element={<CreateCampaign />} />
             <Route path="optimizer" element={<Optimizer />} />
             <Route path="spy" element={<CompetitorSpy />} />
+            <Route path="mvp" element={<MVPChecklist />} />
             <Route path="settings" element={<Settings />} />
           </Route>
           <Route path="*" element={<NotFound />} />

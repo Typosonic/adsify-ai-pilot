@@ -5,7 +5,8 @@ import {
   Plus, 
   Search, 
   Settings, 
-  Calendar 
+  Calendar,
+  Target
 } from "lucide-react";
 
 const Layout = () => {
@@ -14,6 +15,7 @@ const Layout = () => {
     { to: "/create", icon: Plus, label: "Create Campaign" },
     { to: "/optimizer", icon: BarChart3, label: "Optimizer" },
     { to: "/spy", icon: Search, label: "Competitor Spy" },
+    { to: "/mvp", icon: Target, label: "MVP Checklist" },
     { to: "/settings", icon: Settings, label: "Settings" },
   ];
 
