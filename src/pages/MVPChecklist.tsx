@@ -16,11 +16,11 @@ const MVPChecklist = () => {
       estimate: "2-3 days",
       description: "Prepare development environment for scalable engineering",
       tasks: [
-        { id: "1.1", text: "Initialize monorepo structure", completed: false },
-        { id: "1.2", text: "Configure TypeScript, ESLint, Prettier", completed: false },
-        { id: "1.3", text: "Set up Supabase project with Auth", completed: false },
-        { id: "1.4", text: "Create Users and Connections tables", completed: false },
-        { id: "1.5", text: "Connect frontend to Supabase (React Query)", completed: false },
+        { id: "1.1", text: "Initialize monorepo structure", completed: true },
+        { id: "1.2", text: "Configure TypeScript, ESLint, Prettier", completed: true },
+        { id: "1.3", text: "Set up Supabase project with Auth", completed: true },
+        { id: "1.4", text: "Create Users and Connections tables", completed: true },
+        { id: "1.5", text: "Connect frontend to Supabase (React Query)", completed: true },
         { id: "1.6", text: "Deploy initial skeleton to Vercel", completed: false }
       ],
       acceptanceCriteria: [
