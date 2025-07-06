@@ -90,16 +90,16 @@ const MVPChecklist = () => {
     {
       id: 5,
       title: "Optimizer Agent",
-      status: "in-progress",
+      status: "completed",
       priority: "medium",
       estimate: "4-5 days",
       description: "Analyze campaigns for actionable AI recommendations",
       tasks: [
-        { id: "5.1", text: "Scheduled backend job (every 6h)", completed: false },
-        { id: "5.2", text: "Fetch active campaigns from Facebook", completed: false },
-        { id: "5.3", text: "Process data with Claude/GPT-4 for insights", completed: false },
-        { id: "5.4", text: "Store insights in optimizer_insights table", completed: false },
-        { id: "5.5", text: "Frontend module to display insights", completed: false }
+        { id: "5.1", text: "Scheduled backend job (every 6h)", completed: true },
+        { id: "5.2", text: "Fetch active campaigns from Facebook", completed: true },
+        { id: "5.3", text: "Process data with Claude/GPT-4 for insights", completed: true },
+        { id: "5.4", text: "Store insights in optimizer_insights table", completed: true },
+        { id: "5.5", text: "Frontend module to display insights", completed: true }
       ],
       acceptanceCriteria: [
         "Optimizer runs daily with accurate suggestions",

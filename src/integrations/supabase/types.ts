@@ -692,6 +692,62 @@ export type Database = {
           },
         ]
       }
+      optimization_insights: {
+        Row: {
+          analyzed_at: string
+          campaign_id: string
+          campaign_name: string
+          created_at: string
+          id: string
+          key_issues: string[]
+          next_actions: string[]
+          performance_score: number
+          priority: string
+          raw_metrics: Json
+          recommendations: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          analyzed_at?: string
+          campaign_id: string
+          campaign_name: string
+          created_at?: string
+          id?: string
+          key_issues?: string[]
+          next_actions?: string[]
+          performance_score?: number
+          priority?: string
+          raw_metrics?: Json
+          recommendations?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          analyzed_at?: string
+          campaign_id?: string
+          campaign_name?: string
+          created_at?: string
+          id?: string
+          key_issues?: string[]
+          next_actions?: string[]
+          performance_score?: number
+          priority?: string
+          raw_metrics?: Json
+          recommendations?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "optimization_insights_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
