@@ -11,7 +11,7 @@ const MVPChecklist = () => {
     {
       id: 1,
       title: "Set Up Project Environment",
-      status: "in-progress",
+      status: "completed",
       priority: "high",
       estimate: "2-3 days",
       description: "Prepare development environment for scalable engineering",
@@ -31,15 +31,15 @@ const MVPChecklist = () => {
     {
       id: 2,
       title: "Facebook OAuth Integration",
-      status: "in-progress",
+      status: "completed",
       priority: "high",
       estimate: "3-4 days",
       description: "Allow users to connect their Facebook Ads account",
       tasks: [
-        { id: "2.1", text: "Set up Facebook App with Marketing API permissions", completed: false },
-        { id: "2.2", text: "Build OAuth flow with redirect", completed: false },
-        { id: "2.3", text: "Store access tokens securely in Supabase", completed: false },
-        { id: "2.4", text: "Handle token refresh logic", completed: false }
+        { id: "2.1", text: "Set up Facebook App with Marketing API permissions", completed: true },
+        { id: "2.2", text: "Build OAuth flow with redirect", completed: true },
+        { id: "2.3", text: "Store access tokens securely in Supabase", completed: true },
+        { id: "2.4", text: "Handle token refresh logic", completed: true }
       ],
       acceptanceCriteria: [
         "User can connect Facebook Ads account successfully",
@@ -49,17 +49,17 @@ const MVPChecklist = () => {
     {
       id: 3,
       title: "Facebook Ads Dashboard API & Frontend",
-      status: "pending",
+      status: "completed",
       priority: "high",
       estimate: "4-5 days",
       description: "Display live campaign data on user dashboard",
       tasks: [
-        { id: "3.1", text: "Backend endpoint for Facebook Marketing API calls", completed: false },
-        { id: "3.2", text: "Fetch campaigns, ad sets, ads data", completed: false },
-        { id: "3.3", text: "Process data (spend, impressions, ROAS)", completed: false },
-        { id: "3.4", text: "Frontend metrics summary cards", completed: false },
-        { id: "3.5", text: "Graphs for spend and ROAS over time", completed: false },
-        { id: "3.6", text: "Active campaigns table", completed: false }
+        { id: "3.1", text: "Backend endpoint for Facebook Marketing API calls", completed: true },
+        { id: "3.2", text: "Fetch campaigns, ad sets, ads data", completed: true },
+        { id: "3.3", text: "Process data (spend, impressions, ROAS)", completed: true },
+        { id: "3.4", text: "Frontend metrics summary cards", completed: true },
+        { id: "3.5", text: "Graphs for spend and ROAS over time", completed: true },
+        { id: "3.6", text: "Active campaigns table", completed: true }
       ],
       acceptanceCriteria: [
         "Dashboard loads real user data within 2 seconds",

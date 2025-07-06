@@ -1,5 +1,7 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useFacebookIntegration } from '@/hooks/useFacebookIntegration';
+import { useToast } from '@/hooks/use-toast';
 import { 
   BarChart3, 
   Plus, 
@@ -10,6 +12,20 @@ import {
 } from "lucide-react";
 
 const Layout = () => {
+  const { integration, isConnected, connectFacebook } = useFacebookIntegration();
+  const { toast } = useToast();
+
+  const handleConnectFacebook = async () => {
+    try {
+      await connectFacebook();
+    } catch (error) {
+      toast({
+        title: "Connection Failed",
+        description: "Failed to connect to Facebook. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
   const navItems = [
     { to: "/", icon: BarChart3, label: "Dashboard" },
     { to: "/create", icon: Plus, label: "Create Campaign" },
@@ -38,8 +54,12 @@ const Layout = () => {
               <Calendar className="mr-2 h-4 w-4" />
               Last 30 days
             </Button>
-            <Button className="bg-gradient-primary hover:shadow-custom-md transition-all duration-300">
-              Connect Facebook
+            <Button 
+              className="bg-gradient-primary hover:shadow-custom-md transition-all duration-300"
+              onClick={handleConnectFacebook}
+              disabled={isConnected}
+            >
+              {isConnected ? `Connected: ${integration?.account_name}` : 'Connect Facebook'}
             </Button>
           </div>
         </div>
