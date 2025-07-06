@@ -7,259 +7,340 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Upload, Sparkles, Copy, RefreshCw } from "lucide-react";
+import { Wand2, Target, Upload, Rocket, Copy, Edit3 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useFacebookIntegration } from "@/hooks/useFacebookIntegration";
+import { useFacebookAds } from "@/hooks/useFacebookAds";
+import { useCampaignCreation } from "@/hooks/useCampaignCreation";
 
 const CreateCampaign = () => {
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedContent, setGeneratedContent] = useState(false);
   const { toast } = useToast();
+  const { isConnected } = useFacebookIntegration();
+  const { adAccounts } = useFacebookAds();
+  const { loading, generatedAds, generateAdCopy, launchCampaign } = useCampaignCreation();
 
-  const businessTypes = [
-    "E-commerce",
-    "SaaS",
-    "Local Business",
-    "Professional Services",
-    "Education",
-    "Health & Wellness",
-    "Real Estate",
-    "Food & Beverage"
-  ];
+  const [step, setStep] = useState(1);
+  const [campaignData, setCampaignData] = useState({
+    campaignName: "",
+    objective: "",
+    targetAudience: "",
+    productDescription: "",
+    budget: 50,
+    duration: 7,
+    adAccountId: ""
+  });
+  const [selectedAds, setSelectedAds] = useState<number[]>([]);
 
-  const tones = [
-    "Professional",
-    "Friendly & Casual",
-    "Urgent & Direct",
-    "Luxury & Premium",
-    "Funny & Humorous",
-    "Educational",
-    "Emotional & Inspiring"
-  ];
+  if (!isConnected) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Card className="w-full max-w-md text-center">
+          <CardHeader>
+            <CardTitle>Connect Facebook Ads</CardTitle>
+            <CardDescription>
+              Connect your Facebook Ads account to create campaigns
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground text-sm">
+              Click "Connect Facebook" in the header to get started
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
-  const mockGeneratedAds = [
-    {
-      headline: "Transform Your Business with AI-Powered Solutions",
-      primaryText: "Discover how our cutting-edge AI platform can revolutionize your workflow and boost productivity by 300%. Join thousands of satisfied customers who've already made the switch.",
-      cta: "Start Free Trial"
-    },
-    {
-      headline: "Ready to 10x Your Results? This Changes Everything",
-      primaryText: "Stop wasting time on manual processes. Our AI does the heavy lifting so you can focus on what matters most - growing your business and serving your customers.",
-      cta: "Get Started Now"
-    },
-    {
-      headline: "The Future of Business is Here (And It's Affordable)",
-      primaryText: "Experience the power of AI without breaking the bank. Our platform pays for itself within 30 days through increased efficiency and better results.",
-      cta: "See Pricing"
-    }
-  ];
-
-  const generateAds = async () => {
-    setIsGenerating(true);
-    // Simulate AI generation
-    setTimeout(() => {
-      setIsGenerating(false);
-      setGeneratedContent(true);
+  const handleGenerateAds = async () => {
+    try {
+      await generateAdCopy(campaignData);
+      setStep(2);
       toast({
-        title: "Ads Generated!",
-        description: "3 high-converting ad variations have been created for you.",
+        title: "Ad Copy Generated!",
+        description: "Your AI-generated ad variations are ready for review.",
       });
-    }, 2000);
+    } catch (error) {
+      toast({
+        title: "Generation Failed",
+        description: "Failed to generate ad copy. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast({
-      title: "Copied to clipboard",
-      description: "Ad copy has been copied to your clipboard.",
-    });
+  const handleLaunchCampaign = async () => {
+    if (selectedAds.length === 0) {
+      toast({
+        title: "Select Ads",
+        description: "Please select at least one ad variation to launch.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const selectedAdData = selectedAds.map(index => generatedAds[index]);
+      await launchCampaign(campaignData, campaignData.adAccountId, selectedAdData);
+      
+      toast({
+        title: "Campaign Launched!",
+        description: "Your Facebook ad campaign has been created and is ready for review.",
+      });
+      
+      // Reset form
+      setStep(1);
+      setCampaignData({
+        campaignName: "",
+        objective: "",
+        targetAudience: "",
+        productDescription: "",
+        budget: 50,
+        duration: 7,
+        adAccountId: ""
+      });
+      setSelectedAds([]);
+    } catch (error) {
+      toast({
+        title: "Launch Failed",
+        description: "Failed to launch campaign. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const toggleAdSelection = (index: number) => {
+    setSelectedAds(prev => 
+      prev.includes(index) 
+        ? prev.filter(i => i !== index)
+        : [...prev, index]
+    );
   };
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold">Create Campaign</h1>
-        <p className="text-muted-foreground">Generate high-converting Facebook ads with AI</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold flex items-center">
+            <Wand2 className="mr-3 h-8 w-8 text-primary" />
+            Create Campaign
+          </h1>
+          <p className="text-muted-foreground">Generate AI-powered Facebook ad campaigns</p>
+        </div>
+        <Badge variant="outline" className="text-lg px-4 py-2">
+          Step {step} of 2
+        </Badge>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Input Form */}
+      {step === 1 && (
         <Card className="hover:shadow-custom-md transition-all duration-300">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Sparkles className="mr-2 h-5 w-5 text-primary" />
+              <Target className="mr-2 h-5 w-5" />
               Campaign Details
             </CardTitle>
             <CardDescription>
-              Tell our AI about your business and goals
+              Provide information about your campaign to generate targeted ad copy
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="business-type">Business Type</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select your business type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {businessTypes.map((type) => (
-                    <SelectItem key={type} value={type.toLowerCase()}>{type}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="campaignName">Campaign Name</Label>
+                <Input
+                  id="campaignName"
+                  placeholder="e.g. Summer Sale 2024"
+                  value={campaignData.campaignName}
+                  onChange={(e) => setCampaignData(prev => ({ ...prev, campaignName: e.target.value }))}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="adAccount">Ad Account</Label>
+                <Select value={campaignData.adAccountId} onValueChange={(value) => setCampaignData(prev => ({ ...prev, adAccountId: value }))}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Ad Account" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {adAccounts.map((account) => (
+                      <SelectItem key={account.id} value={account.id}>
+                        {account.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="objective">Campaign Objective</Label>
+                <Select value={campaignData.objective} onValueChange={(value) => setCampaignData(prev => ({ ...prev, objective: value }))}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Objective" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="traffic">Drive Traffic</SelectItem>
+                    <SelectItem value="conversions">Conversions</SelectItem>
+                    <SelectItem value="lead_generation">Lead Generation</SelectItem>
+                    <SelectItem value="brand_awareness">Brand Awareness</SelectItem>
+                    <SelectItem value="reach">Reach</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="budget">Daily Budget ($)</Label>
+                <Input
+                  id="budget"
+                  type="number"
+                  min="5"
+                  value={campaignData.budget}
+                  onChange={(e) => setCampaignData(prev => ({ ...prev, budget: parseInt(e.target.value) }))}
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="offer">Product/Offer Description</Label>
-              <Textarea 
-                id="offer"
-                placeholder="Describe your product, service, or special offer..."
-                className="min-h-[80px]"
+              <Label htmlFor="targetAudience">Target Audience</Label>
+              <Textarea
+                id="targetAudience"
+                placeholder="e.g. Young professionals aged 25-35, interested in fitness and health, living in urban areas"
+                value={campaignData.targetAudience}
+                onChange={(e) => setCampaignData(prev => ({ ...prev, targetAudience: e.target.value }))}
+                rows={3}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="audience">Target Audience</Label>
-              <Input 
-                id="audience"
-                placeholder="e.g., Small business owners, 25-45 years old"
+              <Label htmlFor="productDescription">Product/Service Description</Label>
+              <Textarea
+                id="productDescription"
+                placeholder="Describe what you're promoting - features, benefits, unique selling points..."
+                value={campaignData.productDescription}
+                onChange={(e) => setCampaignData(prev => ({ ...prev, productDescription: e.target.value }))}
+                rows={4}
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="tone">Desired Tone</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose your ad tone" />
-                </SelectTrigger>
-                <SelectContent>
-                  {tones.map((tone) => (
-                    <SelectItem key={tone} value={tone.toLowerCase()}>{tone}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="goal">Campaign Goal</Label>
-              <Textarea 
-                id="goal"
-                placeholder="What do you want to achieve? (e.g., increase sales, generate leads, drive traffic)"
-                className="min-h-[60px]"
-              />
-            </div>
+            <Separator />
 
             <Button 
-              onClick={generateAds}
-              disabled={isGenerating}
+              onClick={handleGenerateAds}
+              disabled={loading || !campaignData.campaignName || !campaignData.objective || !campaignData.productDescription || !campaignData.adAccountId}
               className="w-full bg-gradient-primary hover:shadow-custom-md transition-all duration-300"
             >
-              {isGenerating ? (
+              {loading ? (
                 <>
-                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                  Generating Ads...
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Generating Ad Copy...
                 </>
               ) : (
                 <>
-                  <Sparkles className="mr-2 h-4 w-4" />
-                  Generate AI Ads
+                  <Wand2 className="mr-2 h-4 w-4" />
+                  Generate AI Ad Copy
                 </>
               )}
             </Button>
           </CardContent>
         </Card>
+      )}
 
-        {/* Generated Content */}
-        <Card className="hover:shadow-custom-md transition-all duration-300">
-          <CardHeader>
-            <CardTitle>Generated Ad Variations</CardTitle>
-            <CardDescription>
-              AI-powered ad copy ready for Facebook
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {!generatedContent ? (
-              <div className="h-[400px] flex items-center justify-center bg-muted rounded-lg">
-                <div className="text-center">
-                  <Sparkles className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground">Fill out the form and click "Generate AI Ads"</p>
-                  <p className="text-muted-foreground text-sm">to see your custom ad variations</p>
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {mockGeneratedAds.map((ad, index) => (
-                  <div key={index} className="p-4 border rounded-lg bg-card hover:bg-muted/50 transition-colors">
-                    <div className="flex items-center justify-between mb-2">
-                      <Badge variant="outline">Variation {index + 1}</Badge>
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        onClick={() => copyToClipboard(`${ad.headline}\n\n${ad.primaryText}\n\nCTA: ${ad.cta}`)}
-                      >
-                        <Copy className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <h4 className="font-semibold text-sm mb-2 text-primary">Headline:</h4>
-                    <p className="text-sm mb-3 font-medium">{ad.headline}</p>
-                    
-                    <h4 className="font-semibold text-sm mb-2 text-primary">Primary Text:</h4>
-                    <p className="text-sm mb-3 text-muted-foreground">{ad.primaryText}</p>
-                    
-                    <h4 className="font-semibold text-sm mb-2 text-primary">Call to Action:</h4>
-                    <Badge className="bg-success text-success-foreground">{ad.cta}</Badge>
-                  </div>
+      {step === 2 && (
+        <div className="space-y-6">
+          <Card className="hover:shadow-custom-md transition-all duration-300">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Edit3 className="mr-2 h-5 w-5" />
+                Generated Ad Variations
+              </CardTitle>
+              <CardDescription>
+                Review and select the ad variations you want to launch
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {generatedAds.map((ad, index) => (
+                  <Card 
+                    key={index} 
+                    className={`cursor-pointer transition-all duration-300 ${
+                      selectedAds.includes(index) 
+                        ? 'ring-2 ring-primary bg-primary/5' 
+                        : 'hover:shadow-md'
+                    }`}
+                    onClick={() => toggleAdSelection(index)}
+                  >
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <Badge variant="outline">Variation {index + 1}</Badge>
+                        {selectedAds.includes(index) && (
+                          <Badge variant="default">Selected</Badge>
+                        )}
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div>
+                        <Label className="text-xs text-muted-foreground">PRIMARY TEXT</Label>
+                        <p className="text-sm mt-1">{ad.primary_text}</p>
+                      </div>
+                      <div>
+                        <Label className="text-xs text-muted-foreground">HEADLINE</Label>
+                        <p className="text-sm font-medium mt-1">{ad.headline}</p>
+                      </div>
+                      <div>
+                        <Label className="text-xs text-muted-foreground">DESCRIPTION</Label>
+                        <p className="text-sm mt-1">{ad.description}</p>
+                      </div>
+                      <div>
+                        <Label className="text-xs text-muted-foreground">CALL TO ACTION</Label>
+                        <Badge variant="secondary" className="mt-1">{ad.call_to_action}</Badge>
+                      </div>
+                    </CardContent>
+                  </Card>
                 ))}
               </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
 
-      {/* Creative Upload Section */}
-      <Card className="hover:shadow-custom-md transition-all duration-300">
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <Upload className="mr-2 h-5 w-5 text-primary" />
-            Upload Creatives
-          </CardTitle>
-          <CardDescription>
-            Add images or videos for your ad campaigns
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center hover:border-primary/50 transition-colors">
-            <Upload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Drag & drop your creatives</h3>
-            <p className="text-muted-foreground mb-4">Support for JPG, PNG, MP4, and GIF files</p>
-            <Button variant="outline">Browse Files</Button>
-          </div>
-        </CardContent>
-      </Card>
+              <Separator className="my-6" />
 
-      {/* Launch Section */}
-      <Card className="hover:shadow-custom-md transition-all duration-300">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-semibold">Ready to Launch?</h3>
-              <p className="text-muted-foreground">
-                {generatedContent 
-                  ? "Your AI-generated ads are ready. Connect Facebook to launch your campaign."
-                  : "Generate your ads first, then you can launch directly to Facebook."
-                }
-              </p>
-            </div>
-            <Button 
-              disabled={!generatedContent}
-              className="bg-gradient-success hover:shadow-custom-md transition-all duration-300"
-            >
-              Launch Campaign
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+              <div className="flex justify-between">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setStep(1)}
+                >
+                  Back to Edit
+                </Button>
+                
+                <div className="space-x-2">
+                  <Button 
+                    variant="outline"
+                    onClick={handleGenerateAds}
+                    disabled={loading}
+                  >
+                    <Copy className="mr-2 h-4 w-4" />
+                    Regenerate
+                  </Button>
+                  
+                  <Button 
+                    onClick={handleLaunchCampaign}
+                    disabled={loading || selectedAds.length === 0}
+                    className="bg-gradient-primary hover:shadow-custom-md transition-all duration-300"
+                  >
+                    {loading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        Launching...
+                      </>
+                    ) : (
+                      <>
+                        <Rocket className="mr-2 h-4 w-4" />
+                        Launch Campaign ({selectedAds.length})
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };

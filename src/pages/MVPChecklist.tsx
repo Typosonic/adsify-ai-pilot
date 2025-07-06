@@ -69,18 +69,18 @@ const MVPChecklist = () => {
     {
       id: 4,
       title: "Campaign Creation Agent",
-      status: "pending",
+      status: "completed",
       priority: "high",
       estimate: "5-6 days",
       description: "Enable users to generate ad campaigns using AI",
       tasks: [
-        { id: "4.1", text: "Backend endpoint /api/create-campaign", completed: false },
-        { id: "4.2", text: "Integrate Claude/GPT-4 for ad generation", completed: false },
-        { id: "4.3", text: "Generate headlines, primary texts, CTAs", completed: false },
-        { id: "4.4", text: "Frontend input form for campaign details", completed: false },
-        { id: "4.5", text: "Display generated ad copy suggestions", completed: false },
+        { id: "4.1", text: "Backend endpoint /api/create-campaign", completed: true },
+        { id: "4.2", text: "Integrate Claude/GPT-4 for ad generation", completed: true },
+        { id: "4.3", text: "Generate headlines, primary texts, CTAs", completed: true },
+        { id: "4.4", text: "Frontend input form for campaign details", completed: true },
+        { id: "4.5", text: "Display generated ad copy suggestions", completed: true },
         { id: "4.6", text: "Upload creatives section", completed: false },
-        { id: "4.7", text: "Launch Ad button (Facebook Marketing API)", completed: false }
+        { id: "4.7", text: "Launch Ad button (Facebook Marketing API)", completed: true }
       ],
       acceptanceCriteria: [
         "Users can generate ads within 10 seconds",
@@ -90,7 +90,7 @@ const MVPChecklist = () => {
     {
       id: 5,
       title: "Optimizer Agent",
-      status: "pending",
+      status: "in-progress",
       priority: "medium",
       estimate: "4-5 days",
       description: "Analyze campaigns for actionable AI recommendations",
