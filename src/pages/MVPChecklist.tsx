@@ -109,16 +109,16 @@ const MVPChecklist = () => {
     {
       id: 6,
       title: "Competitor Spy Tool",
-      status: "pending",
+      status: "completed",
       priority: "medium",
       estimate: "3-4 days",
       description: "Analyze competitor ads and provide AI insights",
       tasks: [
-        { id: "6.1", text: "Backend endpoint /api/spy-competitor", completed: false },
-        { id: "6.2", text: "Call Facebook Ads Library API", completed: false },
-        { id: "6.3", text: "Process ads with Claude/GPT-4 analysis", completed: false },
-        { id: "6.4", text: "Store results in spy_results table", completed: false },
-        { id: "6.5", text: "Frontend page to display ads and insights", completed: false }
+        { id: "6.1", text: "Backend endpoint /api/spy-competitor", completed: true },
+        { id: "6.2", text: "Call Facebook Ads Library API", completed: true },
+        { id: "6.3", text: "Process ads with Claude/GPT-4 analysis", completed: true },
+        { id: "6.4", text: "Store results in spy_results table", completed: true },
+        { id: "6.5", text: "Frontend page to display ads and insights", completed: true }
       ],
       acceptanceCriteria: [
         "Users can analyze competitor ads in under 20 seconds",
