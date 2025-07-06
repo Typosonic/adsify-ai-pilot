@@ -21,7 +21,7 @@ const MVPChecklist = () => {
         { id: "1.3", text: "Set up Supabase project with Auth", completed: true },
         { id: "1.4", text: "Create Users and Connections tables", completed: true },
         { id: "1.5", text: "Connect frontend to Supabase (React Query)", completed: true },
-        { id: "1.6", text: "Deploy initial skeleton to Vercel", completed: false }
+        { id: "1.6", text: "Deploy initial skeleton to Vercel", completed: true }
       ],
       acceptanceCriteria: [
         "Local dev environment works end-to-end",
@@ -31,7 +31,7 @@ const MVPChecklist = () => {
     {
       id: 2,
       title: "Facebook OAuth Integration",
-      status: "pending",
+      status: "in-progress",
       priority: "high",
       estimate: "3-4 days",
       description: "Allow users to connect their Facebook Ads account",
