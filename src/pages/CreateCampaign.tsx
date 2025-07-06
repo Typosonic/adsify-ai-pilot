@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Wand2, Target, Upload, Rocket, Copy, Edit3 } from "lucide-react";
+import { Wand2, Target, Upload, Rocket, Copy, Edit3, Download, Facebook } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useFacebookIntegration } from "@/hooks/useFacebookIntegration";
 import { useFacebookAds } from "@/hooks/useFacebookAds";
@@ -31,25 +31,6 @@ const CreateCampaign = () => {
   });
   const [selectedAds, setSelectedAds] = useState<number[]>([]);
 
-  if (!isConnected) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Card className="w-full max-w-md text-center">
-          <CardHeader>
-            <CardTitle>Connect Facebook Ads</CardTitle>
-            <CardDescription>
-              Connect your Facebook Ads account to create campaigns
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground text-sm">
-              Click "Connect Facebook" in the header to get started
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   const handleGenerateAds = async () => {
     try {
@@ -116,6 +97,40 @@ const CreateCampaign = () => {
     );
   };
 
+  const handleDownloadCampaign = () => {
+    if (selectedAds.length === 0) {
+      toast({
+        title: "Select Ads",
+        description: "Please select at least one ad variation to download.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const selectedAdData = selectedAds.map(index => generatedAds[index]);
+    const campaignExport = {
+      ...campaignData,
+      selectedAds: selectedAdData,
+      exportedAt: new Date().toISOString(),
+      instructions: "Import this campaign data to Facebook Ads Manager or use with other advertising platforms"
+    };
+
+    const dataStr = JSON.stringify(campaignExport, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    
+    const exportFileDefaultName = `${campaignData.campaignName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_campaign.json`;
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+
+    toast({
+      title: "Campaign Downloaded!",
+      description: "Your campaign data has been saved to your computer.",
+    });
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -156,19 +171,27 @@ const CreateCampaign = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="adAccount">Ad Account</Label>
-                <Select value={campaignData.adAccountId} onValueChange={(value) => setCampaignData(prev => ({ ...prev, adAccountId: value }))}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Ad Account" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {adAccounts.map((account) => (
-                      <SelectItem key={account.id} value={account.id}>
-                        {account.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="adAccount">Ad Account {!isConnected && <span className="text-muted-foreground">(Optional - Connect Facebook to publish directly)</span>}</Label>
+                {isConnected ? (
+                  <Select value={campaignData.adAccountId} onValueChange={(value) => setCampaignData(prev => ({ ...prev, adAccountId: value }))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Ad Account" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {adAccounts.map((account) => (
+                        <SelectItem key={account.id} value={account.id}>
+                          {account.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <div className="p-3 bg-muted rounded-md">
+                    <p className="text-sm text-muted-foreground">
+                      Connect Facebook in Settings to publish campaigns directly, or create offline and export
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -225,7 +248,7 @@ const CreateCampaign = () => {
 
             <Button 
               onClick={handleGenerateAds}
-              disabled={loading || !campaignData.campaignName || !campaignData.objective || !campaignData.productDescription || !campaignData.adAccountId}
+              disabled={loading || !campaignData.campaignName || !campaignData.objective || !campaignData.productDescription}
               className="w-full bg-gradient-primary hover:shadow-custom-md transition-all duration-300"
             >
               {loading ? (
@@ -319,22 +342,47 @@ const CreateCampaign = () => {
                   </Button>
                   
                   <Button 
-                    onClick={handleLaunchCampaign}
+                    onClick={handleDownloadCampaign}
                     disabled={loading || selectedAds.length === 0}
-                    className="bg-gradient-primary hover:shadow-custom-md transition-all duration-300"
+                    variant="outline"
                   >
-                    {loading ? (
-                      <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        Launching...
-                      </>
-                    ) : (
-                      <>
-                        <Rocket className="mr-2 h-4 w-4" />
-                        Launch Campaign ({selectedAds.length})
-                      </>
-                    )}
+                    <Download className="mr-2 h-4 w-4" />
+                    Download Campaign
                   </Button>
+                  
+                  {isConnected ? (
+                    <Button 
+                      onClick={handleLaunchCampaign}
+                      disabled={loading || selectedAds.length === 0 || !campaignData.adAccountId}
+                      className="bg-gradient-primary hover:shadow-custom-md transition-all duration-300"
+                    >
+                      {loading ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Launching...
+                        </>
+                      ) : (
+                        <>
+                          <Facebook className="mr-2 h-4 w-4" />
+                          Launch to Facebook ({selectedAds.length})
+                        </>
+                      )}
+                    </Button>
+                  ) : (
+                    <Button 
+                      onClick={() => {
+                        toast({
+                          title: "Connect Facebook",
+                          description: "Go to Settings to connect Facebook and sync your campaigns.",
+                        });
+                      }}
+                      disabled={selectedAds.length === 0}
+                      className="bg-gradient-primary hover:shadow-custom-md transition-all duration-300"
+                    >
+                      <Facebook className="mr-2 h-4 w-4" />
+                      Connect & Sync ({selectedAds.length})
+                    </Button>
+                  )}
                 </div>
               </div>
             </CardContent>
