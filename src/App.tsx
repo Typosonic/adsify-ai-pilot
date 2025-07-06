@@ -12,6 +12,7 @@ import Optimizer from "./pages/Optimizer";
 import CompetitorSpy from "./pages/CompetitorSpy";
 import Settings from "./pages/Settings";
 import MVPChecklist from "./pages/MVPChecklist";
+import Documentation from "./pages/Documentation";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const AppContent = () => {
           <Route path="optimizer" element={<Optimizer />} />
           <Route path="spy" element={<CompetitorSpy />} />
           <Route path="mvp" element={<MVPChecklist />} />
+          <Route path="docs" element={<Documentation />} />
           <Route path="settings" element={<Settings />} />
         </Route>
         <Route path="*" element={<NotFound />} />

@@ -8,7 +8,8 @@ import {
   Search, 
   Settings, 
   Calendar,
-  Target
+  Target,
+  BookOpen
 } from "lucide-react";
 
 const Layout = () => {
@@ -32,6 +33,7 @@ const Layout = () => {
     { to: "/optimizer", icon: BarChart3, label: "Optimizer" },
     { to: "/spy", icon: Search, label: "Competitor Spy" },
     { to: "/mvp", icon: Target, label: "MVP Checklist" },
+    { to: "/docs", icon: BookOpen, label: "Documentation" },
     { to: "/settings", icon: Settings, label: "Settings" },
   ];
 
