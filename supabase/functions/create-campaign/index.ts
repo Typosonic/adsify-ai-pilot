@@ -52,19 +52,40 @@ serve(async (req) => {
         });
       }
 
-      const prompt = `Generate 3 Facebook ad variations for:
+      const prompt = `You are an expert Facebook ads copywriter with 10+ years of experience creating high-converting ad copy. Write 3 compelling ad variations for:
+
 Product/Service: ${productDescription}
 Campaign Objective: ${objective}
 Target Audience: ${targetAudience}
 Campaign Name: ${campaignName}
 
+Use these proven high-converting frameworks:
+
+FRAMEWORK 1 - BENEFIT + URGENCY + CTA:
+Structure: Hook with benefit → Key features/benefits → Urgency/scarcity → Clear CTA
+Example style: "🔥 [OFFER] DEAL ALERT! 🔥 [Benefit statement] 💎 [Feature 1] 🛡️ [Feature 2] 🚗 [Feature 3] 📍 [Location/credibility] 📲 [Urgent CTA]"
+
+FRAMEWORK 2 - CREDIBILITY + BENEFITS + CTA:
+Structure: Credibility statement → List benefits → Proof points → Direct CTA
+Example style: "✅ [Service] Pros Are Here. [Benefit statement] ✅ [Credibility 1] ✅ [Credibility 2] ✅ [Credibility 3] 📞 [CTA]"
+
+FRAMEWORK 3 - PROBLEM + SOLUTION + PROOF:
+Structure: Address pain point → Present solution → Social proof → CTA
+Focus on transformation and results.
+
 For each variation, provide:
-1. Primary Text (engaging hook, max 125 characters)
-2. Headline (clear value proposition, max 40 characters)  
-3. Description (supporting details, max 30 characters)
+1. Primary Text (engaging hook and main copy, max 200 characters for better impact)
+2. Headline (clear value proposition, max 50 characters)  
+3. Description (supporting details/offer, max 40 characters)
 4. Call-to-Action (action-oriented button text)
 
-Make the copy compelling, audience-specific, and conversion-focused. Use proven copywriting frameworks like AIDA or PAS.
+Requirements:
+- Use emojis strategically for visual appeal
+- Include urgency/scarcity elements
+- Focus on benefits over features
+- Make it locally relevant if location mentioned
+- Use power words that convert
+- Each variation should use a different framework
 
 Format as JSON:
 {
