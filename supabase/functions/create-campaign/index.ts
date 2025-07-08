@@ -99,6 +99,8 @@ Format as JSON:
   ]
 }`;
 
+      console.log('Making OpenAI API call with key:', openAIApiKey ? 'Key present' : 'Key missing');
+      
       const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -116,17 +118,37 @@ Format as JSON:
         }),
       });
 
+      console.log('OpenAI API response status:', aiResponse.status);
+      
+      if (!aiResponse.ok) {
+        const errorText = await aiResponse.text();
+        console.error('OpenAI API error:', errorText);
+        throw new Error(`OpenAI API error: ${aiResponse.status} - ${errorText}`);
+      }
+
       const aiData = await aiResponse.json();
+      console.log('OpenAI API response:', JSON.stringify(aiData, null, 2));
+      
       let generatedContent;
       
       try {
-        generatedContent = JSON.parse(aiData.choices[0].message.content);
+        if (!aiData.choices || !aiData.choices[0] || !aiData.choices[0].message) {
+          throw new Error('Invalid OpenAI response structure');
+        }
+        
+        const content = aiData.choices[0].message.content;
+        console.log('AI generated content:', content);
+        
+        generatedContent = JSON.parse(content);
       } catch (e) {
+        console.error('Error parsing AI response:', e);
+        console.error('Raw AI content:', aiData.choices?.[0]?.message?.content);
+        
         // Fallback if AI doesn't return valid JSON
         generatedContent = {
           variations: [
             {
-              primary_text: "Transform your business with our proven solution. Join thousands of satisfied customers.",
+              primary_text: "🔥 EXCLUSIVE DEAL ALERT! 🔥 Transform your business with our proven solution that gets results in 30 days or less!",
               headline: "Get Results in 30 Days",
               description: "Money-back guarantee",
               call_to_action: "Learn More"
