@@ -28,13 +28,13 @@ const Layout = () => {
     }
   };
   const navItems = [
-    { to: "/", icon: BarChart3, label: "Dashboard" },
-    { to: "/create", icon: Plus, label: "Create Campaign" },
-    { to: "/optimizer", icon: BarChart3, label: "Optimizer" },
-    { to: "/spy", icon: Search, label: "Competitor Spy" },
-    { to: "/mvp", icon: Target, label: "MVP Checklist" },
-    { to: "/docs", icon: BookOpen, label: "Documentation" },
-    { to: "/settings", icon: Settings, label: "Settings" },
+    { to: "/app", icon: BarChart3, label: "Dashboard" },
+    { to: "/app/create", icon: Plus, label: "Create Campaign" },
+    { to: "/app/optimizer", icon: BarChart3, label: "Optimizer" },
+    { to: "/app/spy", icon: Search, label: "Competitor Spy" },
+    { to: "/app/mvp", icon: Target, label: "MVP Checklist" },
+    { to: "/app/docs", icon: BookOpen, label: "Documentation" },
+    { to: "/app/settings", icon: Settings, label: "Settings" },
   ];
 
   return (
