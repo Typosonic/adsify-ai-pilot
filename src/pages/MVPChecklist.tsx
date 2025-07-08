@@ -127,17 +127,78 @@ const MVPChecklist = () => {
     },
     {
       id: 7,
-      title: "Deployment & QA",
+      title: "Landing Page & Public Site",
       status: "pending",
       priority: "high",
       estimate: "2-3 days",
-      description: "Deploy MVP to production with testing",
+      description: "Create marketing landing page with hero, features, pricing",
       tasks: [
-        { id: "7.1", text: "Set up CI/CD pipeline GitHub to Vercel", completed: false },
-        { id: "7.2", text: "End-to-end tests for each agent endpoint", completed: false },
-        { id: "7.3", text: "Frontend polish (loading states, errors)", completed: false },
-        { id: "7.4", text: "Security review (tokens, API keys)", completed: false },
-        { id: "7.5", text: "User onboarding flow for live tests", completed: false }
+        { id: "7.1", text: "Design hero section with value proposition", completed: false },
+        { id: "7.2", text: "Features showcase with screenshots/demos", completed: false },
+        { id: "7.3", text: "Pricing section with plan comparison", completed: false },
+        { id: "7.4", text: "Testimonials and social proof", completed: false },
+        { id: "7.5", text: "Footer with links and company info", completed: false },
+        { id: "7.6", text: "Responsive design optimization", completed: false }
+      ],
+      acceptanceCriteria: [
+        "Landing page converts visitors to sign-ups",
+        "Mobile-responsive design with fast load times"
+      ]
+    },
+    {
+      id: 8,
+      title: "Stripe Payment Integration",
+      status: "pending",
+      priority: "high",
+      estimate: "3-4 days",
+      description: "Implement subscription billing with Stripe",
+      tasks: [
+        { id: "8.1", text: "Set up Stripe account and API keys", completed: false },
+        { id: "8.2", text: "Create subscription plans in Stripe", completed: false },
+        { id: "8.3", text: "Build checkout flow edge function", completed: false },
+        { id: "8.4", text: "Implement subscription verification", completed: false },
+        { id: "8.5", text: "Add customer portal for billing management", completed: false },
+        { id: "8.6", text: "Create billing page in app", completed: false }
+      ],
+      acceptanceCriteria: [
+        "Users can subscribe and manage billing",
+        "Subscription verification works correctly"
+      ]
+    },
+    {
+      id: 9,
+      title: "UI/UX Polish & Design Refinement",
+      status: "pending",
+      priority: "medium",
+      estimate: "2-3 days",
+      description: "Enhance visual design and user experience",
+      tasks: [
+        { id: "9.1", text: "Refine color scheme and typography", completed: false },
+        { id: "9.2", text: "Add loading states and error handling", completed: false },
+        { id: "9.3", text: "Improve navigation and user flow", completed: false },
+        { id: "9.4", text: "Add animations and micro-interactions", completed: false },
+        { id: "9.5", text: "Optimize mobile responsiveness", completed: false },
+        { id: "9.6", text: "Create consistent component library", completed: false }
+      ],
+      acceptanceCriteria: [
+        "Professional SaaS-quality design",
+        "Smooth user experience across all devices"
+      ]
+    },
+    {
+      id: 10,
+      title: "Final Deployment & QA",
+      status: "pending",
+      priority: "high",
+      estimate: "2-3 days",
+      description: "Deploy production-ready SaaS with testing",
+      tasks: [
+        { id: "10.1", text: "Set up CI/CD pipeline GitHub to Vercel", completed: false },
+        { id: "10.2", text: "End-to-end tests for each agent endpoint", completed: false },
+        { id: "10.3", text: "Security review (tokens, API keys)", completed: false },
+        { id: "10.4", text: "Performance optimization", completed: false },
+        { id: "10.5", text: "User onboarding flow for live tests", completed: false },
+        { id: "10.6", text: "Domain setup and SSL configuration", completed: false }
       ],
       acceptanceCriteria: [
         "Production deployment is stable",
