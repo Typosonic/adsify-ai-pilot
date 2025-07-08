@@ -133,12 +133,12 @@ const MVPChecklist = () => {
       estimate: "2-3 days",
       description: "Create marketing landing page with hero, features, pricing",
       tasks: [
-        { id: "7.1", text: "Design hero section with value proposition", completed: false },
-        { id: "7.2", text: "Features showcase with screenshots/demos", completed: false },
-        { id: "7.3", text: "Pricing section with plan comparison", completed: false },
-        { id: "7.4", text: "Testimonials and social proof", completed: false },
-        { id: "7.5", text: "Footer with links and company info", completed: false },
-        { id: "7.6", text: "Responsive design optimization", completed: false }
+        { id: "7.1", text: "Design hero section with value proposition", completed: true },
+        { id: "7.2", text: "Features showcase with screenshots/demos", completed: true },
+        { id: "7.3", text: "Pricing section with plan comparison", completed: true },
+        { id: "7.4", text: "Testimonials and social proof", completed: true },
+        { id: "7.5", text: "Footer with links and company info", completed: true },
+        { id: "7.6", text: "Responsive design optimization", completed: true }
       ],
       acceptanceCriteria: [
         "Landing page converts visitors to sign-ups",

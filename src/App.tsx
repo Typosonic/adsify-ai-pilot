@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthForm } from "@/components/auth/AuthForm";
 import { useAuth } from "@/hooks/useAuth";
 import Layout from "./components/Layout";
+import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
 import CreateCampaign from "./pages/CreateCampaign";
 import Optimizer from "./pages/Optimizer";
@@ -28,22 +29,29 @@ const AppContent = () => {
     );
   }
 
-  if (!user) {
-    return <AuthForm />;
-  }
-
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="create" element={<CreateCampaign />} />
-          <Route path="optimizer" element={<Optimizer />} />
-          <Route path="spy" element={<CompetitorSpy />} />
-          <Route path="mvp" element={<MVPChecklist />} />
-          <Route path="docs" element={<Documentation />} />
-          <Route path="settings" element={<Settings />} />
-        </Route>
+        {/* Public routes */}
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<AuthForm />} />
+        <Route path="/signup" element={<AuthForm />} />
+        
+        {/* Protected routes - require authentication */}
+        {user ? (
+          <Route path="/app" element={<Layout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="create" element={<CreateCampaign />} />
+            <Route path="optimizer" element={<Optimizer />} />
+            <Route path="spy" element={<CompetitorSpy />} />
+            <Route path="mvp" element={<MVPChecklist />} />
+            <Route path="docs" element={<Documentation />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
+        ) : (
+          <Route path="/app/*" element={<AuthForm />} />
+        )}
+        
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
