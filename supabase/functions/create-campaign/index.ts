@@ -45,7 +45,10 @@ serve(async (req) => {
     if (action === 'generate') {
       // Generate ad copy using AI
       const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+      console.log('OpenAI API Key status:', openAIApiKey ? `Present (${openAIApiKey.substring(0, 10)}...)` : 'Missing');
+      
       if (!openAIApiKey) {
+        console.error('OpenAI API key is missing from environment variables');
         return new Response(JSON.stringify({ error: 'OpenAI API key not configured' }), {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
