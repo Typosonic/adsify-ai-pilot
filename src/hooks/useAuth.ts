@@ -30,6 +30,7 @@ export const useAuth = () => {
       password,
       options: {
         data: metadata,
+        emailRedirectTo: `${window.location.origin}/app`,
       },
     });
     return { data, error };

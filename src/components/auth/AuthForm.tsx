@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -7,15 +8,23 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 
 export const AuthForm = () => {
-  const [isSignUp, setIsSignUp] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { signUp, signIn, user } = useAuth();
+  const { toast } = useToast();
+
+  const [isSignUp, setIsSignUp] = useState(location.pathname === '/signup');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
-  
-  const { signUp, signIn } = useAuth();
-  const { toast } = useToast();
+
+  // Redirect if already logged in
+  if (user) {
+    navigate('/app');
+    return null;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,6 +58,12 @@ export const AuthForm = () => {
             description: error.message,
             variant: "destructive",
           });
+        } else {
+          toast({
+            title: "Success",
+            description: "Welcome back!",
+          });
+          navigate('/app');
         }
       }
     } catch (error) {
@@ -69,8 +84,8 @@ export const AuthForm = () => {
           <CardTitle>{isSignUp ? 'Create Account' : 'Sign In'}</CardTitle>
           <CardDescription>
             {isSignUp 
-              ? 'Create your AgentFlow account to get started' 
-              : 'Welcome back to AgentFlow'
+              ? 'Create your Adsify account to get started' 
+              : 'Welcome back to Adsify'
             }
           </CardDescription>
         </CardHeader>
